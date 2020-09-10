@@ -1,0 +1,5 @@
+spring:
+  r2dbc:
+    url: r2dbc:postgresql://${DB_HOST:127.0.0.1}:${DB_PORT:5432}/${DB_NAME:demo-app}
+    username: ${DB_USERNAME:demo-app}
+    password: ${DB_PASSWORD:demo-app}

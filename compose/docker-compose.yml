@@ -1,0 +1,33 @@
+version: "3.7"
+services:
+
+  db:
+    image: postgres:12-alpine
+    container_name: db
+    hostname: db
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: demo-app
+      POSTGRES_PASSWORD: demo-app
+      POSTGRES_DB: demo-app
+      PGDATA: /var/lib/postgresql/data/demo-app
+    volumes:
+      - postgres-demo-r2dbc:/var/lib/postgresql/data/demo-app
+      - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+    command: ["-c", "shared_buffers=256MB", "-c", "max_connections=200"]
+    networks:
+      - demo-r2dbc
+    healthcheck:
+      test: PGPASSWORD=demo-app psql -d demo-app -U demo-app -w -c '\q'
+      interval: 20s
+      timeout: 10s
+
+networks:
+  demo-r2dbc:
+    driver: bridge
+
+volumes:
+  postgres-demo-r2dbc:
+    external: false
